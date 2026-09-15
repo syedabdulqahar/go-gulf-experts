@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
-// @ts-ignore - Workaround for 'no default export' error
-import pdfParse from "pdf-parse";
+import * as pdfParseModule from "pdf-parse";
+// @ts-ignore
+const pdfParse = typeof pdfParseModule.default === 'function' ? pdfParseModule.default : pdfParseModule;
 
 // Hardcoded keywords to match against the resume
 const TARGET_KEYWORDS = [
