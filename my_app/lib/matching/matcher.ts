@@ -98,10 +98,18 @@ function tokenOverlap(resumeText: string, jobText: string) {
 }
 
 function categoryScore(resumeText: string, jobText: string, skills: readonly string[]) {
-  const requested = skills.filter(skill => includesSkill(jobText.toLowerCase(), skill));
-  if (requested.length === 0) return 60;
-  const matched = requested.filter(skill => includesSkill(resumeText.toLowerCase(), skill)).length;
-  return Math.round((matched / requested.length) * 100);
+  const normalizedResume = resumeText.toLowerCase();
+  const normalizedJob = jobText.toLowerCase();
+  const requested = skills.filter(skill => includesSkill(normalizedJob, skill));
+
+  if (requested.length > 0) {
+    const matched = requested.filter(skill => includesSkill(normalizedResume, skill)).length;
+    return Math.round((matched / requested.length) * 100);
+  }
+
+  const resumeCategorySkills = skills.filter(skill => includesSkill(normalizedResume, skill));
+  if (resumeCategorySkills.length === 0) return 0;
+  return Math.round((resumeCategorySkills.length / skills.length) * 100);
 }
 
 export function matchResumeToJob(resumeText: string, jobText: string): MatchAnalysis {
